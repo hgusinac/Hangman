@@ -9,18 +9,17 @@ namespace Hangman
     {
         static void Main(string[] args)
         {
+            //lägg till en meny som loppar  med att köra spelet igen.
+            // bygga på ordbanken 
 
-            string[] wordbank = { "haris", "gusinac", "ulf", "ammara", "huskvarna" };// random ord
+            string[] wordbank = { "haris", "gusinac", "ulf", "ammara", "huskvarna", "games", "båt", "is" };// random ord
 
             Random random = new Random();
             string wordToguess = wordbank[random.Next(wordbank.Length)]; // Random Ord att gissa
 
-
             /*StringBuilder displayToPlayer = new StringBuilder();//Se över (wordToGuess.Length)
             for (int i = 0; i < wordToguess.Length; i++)
                 displayToPlayer.Append('_');*/
-
-
 
             char[] correctGuesses = new char[wordToguess.Length];// Gör om till  Arrays 
             Array.Fill<char>(correctGuesses, '_');
@@ -35,18 +34,12 @@ namespace Hangman
             string input;
             char guess;
 
-            Console.WriteLine($"Lives left :{lives}");
 
-            foreach (char c in correctGuesses)
+
+
+            while (!won && lives > 0)// om man gissar på hela ordet 
             {
-                Console.Write(c + " ");
-
-            }
-            Console.Write("\n");
-
-
-            while (!won && lives > 0)
-            {
+                Status(lives, incorrectGuesses, correctGuesses);
                 Console.Write("Guess a letter:");
 
                 input = Console.ReadLine().ToLower();
@@ -60,7 +53,7 @@ namespace Hangman
                     }
 
                 }
-                if (input.Length == 1)
+                if (input.Length == 1)// om man gissar på en bokstav
                 {
 
 
@@ -70,58 +63,51 @@ namespace Hangman
                     {
 
                         Console.WriteLine($"You already tried '{guess}' and it was correct!");
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine($"Lives left :{lives}");
-                        Console.ResetColor();
-                        continue;
+
                     }
                     else if (incorrectGuesses.ToString().Contains(guess))
                     {
 
                         Console.WriteLine("You already tried '{0}', an it was wrong!", guess);
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine($"Lives left :{lives}");
-                        Console.ResetColor();
-                        continue;
+
                     }
-                    if (wordToguess.Contains(guess))
+                    else if (wordToguess.Contains(guess))
                     {
                         lives--;
 
                         correctGuesses.Append(guess);
-                        for (int i = 0; i < wordToguess.Length; i++)
+                        for (int i = 0; i < wordToguess.Length; i++)//när man gissar rätt händer detta.
                         {
+
                             if (wordToguess[i] == guess)
+
                             {
                                 correctGuesses[i] = wordToguess[i];
+
+
 
                             }
 
                         }
-                        Writelivesleft(lives);
+
                         if (!correctGuesses.Contains('_'))
                             won = true;
                     }
                     else
                     {
                         incorrectGuesses.Append(guess);
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine($"Not in the Word:{incorrectGuesses}");
-                        Console.ResetColor();
                         lives--;
-                        Console.WriteLine($"Lives left :{lives}");
+
+
                     }
 
-                    foreach (char c in correctGuesses)
-                    {
-                        Console.Write(c + " ");
-                    }
-                    Console.Write("\n");
+                    
                 }
             }
             if (won)
             {
                 Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine(wordToguess);
                 Console.WriteLine("You won!");
             }
 
@@ -131,11 +117,34 @@ namespace Hangman
             Console.ReadLine();
 
         }
-        static void Writelivesleft(int livesleft)
+        static void Status(int livesleft, StringBuilder incorrectGuesses, char[] correctGuesses)
         {
+            foreach (char c in correctGuesses)
+            {
+                if (c != '_')
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                }
+                else
+                {
+                    Console.ResetColor();
+                }
+                Console.Write(c + " ");
+
+            }
+            Console.Write("\n");
+
+            if (!incorrectGuesses.Equals(""))
+            {
+                Console.WriteLine($"Not in the Word:{incorrectGuesses}");
+            }
+
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine($"Lives left :{livesleft}");
+            Console.WriteLine(
+                );
             Console.ResetColor();
+
         }
     }
 }
