@@ -7,7 +7,7 @@ namespace Hangman
 {
     class Program
     {
-        static string[] wordbank = { "haris", "gusinac", "ulf", "ammara", "huskvarna", };// random ord
+        static string[] wordbank = { "haris", "gusinac", "ulf", "ammara", "huskvarna" };// random ord
         static void Main(string[] args)
         {
             Play();
@@ -17,10 +17,14 @@ namespace Hangman
         {
             Random random = new Random((int)DateTime.Now.Ticks);
             string wordToguess = wordbank[random.Next(0, wordbank.Length)]; // Random Ord att gissa
-            string wordToGuessUppercase = wordToguess.ToUpper();
-            StringBuilder displayToPlayer = new StringBuilder();//Se över (wordToGuess.Length)
+            
+
+            /*StringBuilder displayToPlayer = new StringBuilder();//Se över (wordToGuess.Length)
             for (int i = 0; i < wordToguess.Length; i++)
-                displayToPlayer.Append('_');
+                displayToPlayer.Append('_');*/
+
+
+            
 
             char[] correctGuesses = new char[10];// Gör om till  Arrays 
 
@@ -30,42 +34,40 @@ namespace Hangman
 
             int lives = 9;
             bool won = false;
-            int lettersRevealed = 0;
+            
             string input;
             char guess;
 
 
 
-            // hur många liv som är kvar synligt !!
+            
             Console.WriteLine(displayToPlayer);
 
 
             while (!won && lives > 0)
             {
                 Console.Write("Guess a letter:");
-                input = Console.ReadLine().ToUpper();
+                input = Console.ReadLine().ToLower();
                 if (input.Length > 1)
                 {
                     lives--;
                     if (input.Equals(wordToguess))
                     {
-                        for (int i = 0; i < wordToguess.Length; i++)
-                        {
-                            displayToPlayer[i] = wordToguess[i];
-                            lettersRevealed++;
-                        }
+                        Console.WriteLine(wordToguess);
+                        won = true;
                     }
-                    won = true;
+                  
                 }
                 if (input.Length == 1)
                 {
 
 
                     guess = input[0];
-
-                    if (correctGuesses.Contains(guess))
+                    
+                    if (displayToPlayer.ToString().Contains(guess))
                     {
-                        Console.WriteLine("You already tried '{0}' and it was correct!", guess);
+                        
+                        Console.WriteLine($"You already tried '{guess}' and it was correct!");
                         continue;
                     }
                     else if (incorrectGuesses.ToString().Contains(guess))
@@ -74,25 +76,25 @@ namespace Hangman
                         Console.WriteLine("You already tried '{0}', an it was wrong!", guess);
                         continue;
                     }
-                    if (wordToGuessUppercase.Contains(guess))
+                    if (wordToguess.Contains(guess))
                     {
                         correctGuesses.Append(guess);
                         for (int i = 0; i < wordToguess.Length; i++)
                         {
-                            if (wordToGuessUppercase[i] == guess)
+                            if (wordToguess[i] == guess)
                             {
                                 displayToPlayer[i] = wordToguess[i];
-                                lettersRevealed++;
+                               
                             }
 
                         }
-                        if (lettersRevealed == wordToGuessUppercase.Length)
+                        if (!displayToPlayer.ToString().Contains('_'))
                             won = true;
                     }
                     else
                     {
                         incorrectGuesses.Append(guess);
-                        Console.WriteLine($"No, there's no '{incorrectGuesses} ' in the word.");
+                        Console.WriteLine($"No, its not in the word\n :{incorrectGuesses}");
                         Console.WriteLine($"Lives left :{lives}");
                         lives--;
                     }
