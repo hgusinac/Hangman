@@ -7,46 +7,48 @@ namespace Hangman
 {
     class Program
     {
-        static string[] wordbank = { "haris", "gusinac", "ulf", "ammara", "huskvarna" };// random ord
         static void Main(string[] args)
         {
-            Play();
 
-        }
-        static void Play()
-        {
-            Random random = new Random((int)DateTime.Now.Ticks);
-            string wordToguess = wordbank[random.Next(0, wordbank.Length)]; // Random Ord att gissa
-            
+            string[] wordbank = { "haris", "gusinac", "ulf", "ammara", "huskvarna" };// random ord
+
+            Random random = new Random();
+            string wordToguess = wordbank[random.Next(wordbank.Length)]; // Random Ord att gissa
+
 
             /*StringBuilder displayToPlayer = new StringBuilder();//Se över (wordToGuess.Length)
             for (int i = 0; i < wordToguess.Length; i++)
                 displayToPlayer.Append('_');*/
 
 
-            
 
-            char[] correctGuesses = new char[10];// Gör om till  Arrays 
+            char[] correctGuesses = new char[wordToguess.Length];// Gör om till  Arrays 
+            Array.Fill<char>(correctGuesses, '_');
 
             StringBuilder incorrectGuesses = new StringBuilder();// fel gissningar
 
             // List<char> incorrectGuesses = new List<char>();// Gör om till String builder Arrays 
 
-            int lives = 9;
+            int lives = 10;
             bool won = false;
-            
+
             string input;
             char guess;
 
+            Console.WriteLine($"Lives left :{lives}");
 
+            foreach (char c in correctGuesses)
+            {
+                Console.Write(c + " ");
 
-            
-            Console.WriteLine(displayToPlayer);
+            }
+            Console.Write("\n");
 
 
             while (!won && lives > 0)
             {
                 Console.Write("Guess a letter:");
+
                 input = Console.ReadLine().ToLower();
                 if (input.Length > 1)
                 {
@@ -56,49 +58,65 @@ namespace Hangman
                         Console.WriteLine(wordToguess);
                         won = true;
                     }
-                  
+
                 }
                 if (input.Length == 1)
                 {
 
 
                     guess = input[0];
-                    
-                    if (displayToPlayer.ToString().Contains(guess))
+
+                    if (correctGuesses.Contains(guess))
                     {
-                        
+
                         Console.WriteLine($"You already tried '{guess}' and it was correct!");
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine($"Lives left :{lives}");
+                        Console.ResetColor();
                         continue;
                     }
                     else if (incorrectGuesses.ToString().Contains(guess))
                     {
 
                         Console.WriteLine("You already tried '{0}', an it was wrong!", guess);
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine($"Lives left :{lives}");
+                        Console.ResetColor();
                         continue;
                     }
                     if (wordToguess.Contains(guess))
                     {
+                        lives--;
+
                         correctGuesses.Append(guess);
                         for (int i = 0; i < wordToguess.Length; i++)
                         {
                             if (wordToguess[i] == guess)
                             {
-                                displayToPlayer[i] = wordToguess[i];
-                               
+                                correctGuesses[i] = wordToguess[i];
+
                             }
 
                         }
-                        if (!displayToPlayer.ToString().Contains('_'))
+                        Writelivesleft(lives);
+                        if (!correctGuesses.Contains('_'))
                             won = true;
                     }
                     else
                     {
                         incorrectGuesses.Append(guess);
-                        Console.WriteLine($"No, its not in the word\n :{incorrectGuesses}");
-                        Console.WriteLine($"Lives left :{lives}");
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine($"Not in the Word:{incorrectGuesses}");
+                        Console.ResetColor();
                         lives--;
+                        Console.WriteLine($"Lives left :{lives}");
                     }
-                    Console.WriteLine(displayToPlayer.ToString());
+
+                    foreach (char c in correctGuesses)
+                    {
+                        Console.Write(c + " ");
+                    }
+                    Console.Write("\n");
                 }
             }
             if (won)
@@ -112,6 +130,12 @@ namespace Hangman
             Console.WriteLine("Press ENTER TO Exit...");
             Console.ReadLine();
 
+        }
+        static void Writelivesleft(int livesleft)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine($"Lives left :{livesleft}");
+            Console.ResetColor();
         }
     }
 }
