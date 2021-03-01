@@ -9,24 +9,22 @@ namespace Hangman
     {
         static void Main(string[] args)
         {
-            //lägg till en meny som loppar  med att köra spelet igen.
-            // bygga på ordbanken 
+           
+           
 
-            string[] wordbank = { "haris", "gusinac", "ulf", "ammara", "huskvarna", "games", "båt", "is" };// random ord
+            string[] wordbank = { "haris", "gusinac", "ulf", "ammara", "huskvarna", "games", "båt", "is" };
 
             Random random = new Random();
-            string wordToguess = wordbank[random.Next(wordbank.Length)]; // Random Ord att gissa
+            string wordToguess = wordbank[random.Next(wordbank.Length)]; 
 
-            /*StringBuilder displayToPlayer = new StringBuilder();//Se över (wordToGuess.Length)
-            for (int i = 0; i < wordToguess.Length; i++)
-                displayToPlayer.Append('_');*/
+           
 
-            char[] correctGuesses = new char[wordToguess.Length];// Gör om till  Arrays 
+            char[] correctGuesses = new char[wordToguess.Length];
             Array.Fill<char>(correctGuesses, '_');
 
-            StringBuilder incorrectGuesses = new StringBuilder();// fel gissningar
+            StringBuilder incorrectGuesses = new StringBuilder();
 
-            // List<char> incorrectGuesses = new List<char>();// Gör om till String builder Arrays 
+            
 
             int lives = 10;
             bool won = false;
@@ -37,7 +35,7 @@ namespace Hangman
 
 
 
-            while (!won && lives > 0)// om man gissar på hela ordet 
+            while (!won && lives > 0)
             {
                 Status(lives, incorrectGuesses, correctGuesses);
                 Console.Write("Guess a letter:");
@@ -53,7 +51,7 @@ namespace Hangman
                     }
 
                 }
-                if (input.Length == 1)// om man gissar på en bokstav
+                if (input.Length == 1)
                 {
 
 
@@ -76,7 +74,7 @@ namespace Hangman
                         lives--;
 
                         correctGuesses.Append(guess);
-                        for (int i = 0; i < wordToguess.Length; i++)//när man gissar rätt händer detta.
+                        for (int i = 0; i < wordToguess.Length; i++)
                         {
 
                             if (wordToguess[i] == guess)
@@ -101,7 +99,7 @@ namespace Hangman
 
                     }
 
-                    
+
                 }
             }
             if (won)
@@ -109,14 +107,22 @@ namespace Hangman
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine(wordToguess);
                 Console.WriteLine("You won!");
+                Console.WriteLine("---------------------");
             }
 
             else
                 Console.WriteLine("You lose! it was '{0}'", wordToguess);
-            Console.WriteLine("Press ENTER TO Exit...");
-            Console.ReadLine();
+            Console.WriteLine("To run again type A or Enter to Exit");
+            if (Console.ReadKey(true).Key == ConsoleKey.A)
+            {
+                Main(args);
+            }
+        
 
         }
+
+
+
         static void Status(int livesleft, StringBuilder incorrectGuesses, char[] correctGuesses)
         {
             foreach (char c in correctGuesses)
